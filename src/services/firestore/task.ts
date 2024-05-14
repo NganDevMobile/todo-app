@@ -2,33 +2,33 @@ import firestore, { firebase } from '@react-native-firebase/firestore';
 
 const instance = firestore().collection('task');
 
-const getAll = async (
-  userId: string,
-  onSuccess: (value: any[]) => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .where('userId', '==', userId)
-    .get()
-    .then(querySnapshot => {
-      let arr: any[] = [];
+const getAllTasks = async (userId: string) => {
+  return new Promise((resolve, reject) => {
+    instance
+      .where('userId', '==', userId)
+      .get()
+      .then(querySnapshot => {
+        let arr: any[] = [];
 
-      querySnapshot.forEach(snapshot => {
-        const { date, ...data } = snapshot.data();
+        querySnapshot.forEach(snapshot => {
+          const { date, ...data } = snapshot.data();
 
-        arr.push({
-          ...data,
-          date: date.toDate(),
-          id: snapshot.id,
+          arr.push({
+            ...data,
+            date: date.toDate(),
+            id: snapshot.id,
+          });
         });
-      });
 
-      return onSuccess(arr);
-    })
-    .catch(onFailed);
+        console.log('>>> arr', arr);
+
+        return resolve(arr);
+      })
+      .catch(reject);
+  });
 };
 
-const create = async (
+const createTask = async (
   data: any,
   onSuccess: (id: string) => void,
   onFailed: (error: Error) => any,
@@ -81,10 +81,4 @@ const removeAll = async (
     .catch(onFailed);
 };
 
-export default {
-  getAll,
-  create,
-  update,
-  remove,
-  removeAll,
-};
+export { getAllTasks };

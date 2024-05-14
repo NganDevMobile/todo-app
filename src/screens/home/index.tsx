@@ -1,5 +1,11 @@
-import { SafeAreaView, StyleSheet, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import React, { useEffect } from 'react';
 import { RouterNames } from '@common';
 import { useNavigation } from '@react-navigation/native';
 import Header from '@components/Header';
@@ -8,6 +14,8 @@ import images from '@theme/images';
 import { sizeScale } from '@common/Scale';
 import { colors } from 'utils';
 import { RegularText } from '@components/Text';
+import useStore from '@zustand';
+import { useGetTasks } from 'hooks/useTasks';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -15,6 +23,34 @@ const HomeScreen = () => {
   const addTask = () => {
     navigation.navigate(RouterNames.ADD_SCREEN as never);
   };
+
+  const { isPending, mutateAsync: getAllTasks } = useGetTasks();
+  const { tasks, setTasks } = useStore();
+
+  useEffect(() => {
+    console.log('>>> pending', isPending);
+  }, [isPending]);
+
+  useEffect(() => {
+    console.log('>>> tasks', tasks);
+  }, [tasks]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const items = await getAllTasks('QirUyHJuUROWnSBEGoX5');
+      setTasks(items);
+    } catch (error) {
+      console.log('>>> error', error);
+    }
+  };
+
+  if (isPending) {
+    return <Text>Loading</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>

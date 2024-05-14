@@ -1,7 +1,7 @@
 import { StoreApi, create } from 'zustand';
 import LocalStorage from '../local-storage';
 import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
-import createTaskSlice, { TaskSlice } from './app/AppSlice';
+import createTaskSlice, { TaskSlice } from './app/TaskSlice';
 
 export type StoreState = TaskSlice;
 export type StoreSlice<T> = (
