@@ -30,7 +30,8 @@
           { "@utils": "./src/utils" },             
           { "@zustand": "./src/services/zustand/store" },
           { "@config": "./src/utils/config" },
-          { "@theme": "./src/utils/theme" }
+          { "@theme": "./src/utils/theme" },
+          { "@types": "./src/types" }
         ]
       }
       ],

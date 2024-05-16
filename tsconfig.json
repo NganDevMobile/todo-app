@@ -74,7 +74,8 @@
       "@zustand": ["./services/zustand/store"],
       "@services/*": ["./services/*"],
       "@local-storage": ["./services/local-storage"],
-      "@utils": ["./utils/"]
+      "@utils": ["./utils/"],
+      "@types": ["./types"]
     } /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
   },
   "exclude": [

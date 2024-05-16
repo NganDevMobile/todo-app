@@ -77,6 +77,10 @@ export default StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'space-between',
   },
+  rowSpaceBetween: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   selfStretch: {
     alignSelf: 'stretch',
   },

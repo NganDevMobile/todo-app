@@ -1,15 +1,14 @@
-import React from 'react'
-import { StyleSheet, TouchableOpacity } from 'react-native'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { MediumText } from '../Text'
-import { SocialButtonProps } from './Type'
-import { sizeScale } from '@/Common/Scale'
-import { Colors } from '@/Theme/Variables'
-import { useTheme } from '@/Common/Hooks'
+import React from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { MediumText } from '../Text';
+import { SocialButtonProps } from './Type';
+import { Layout } from '@theme';
+import { sizeScale } from '@common/Scale';
+import { colors } from 'utils';
 
 export const SocialButton = (props: SocialButtonProps) => {
-  const { style, type, onPress } = props
-  const { Layout } = useTheme()
+  const { style, type, onPress } = props;
 
   return (
     <TouchableOpacity
@@ -24,27 +23,27 @@ export const SocialButton = (props: SocialButtonProps) => {
       <FontAwesome
         name={type === 'google' ? 'google' : 'facebook'}
         size={sizeScale(18)}
-        color={Colors.white}
+        color={colors.white}
         style={styles.icon}
       />
       <MediumText style={styles.text}>
         {type === 'google' ? 'Google' : 'Facebook'}
       </MediumText>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: sizeScale(16),
     height: sizeScale(50),
-    borderRadius: 8,
+    borderRadius: sizeScale(8),
   },
   text: {
-    color: Colors.white,
+    color: colors.white,
   },
   icon: {
     marginRight: sizeScale(8),
   },
-})
+});

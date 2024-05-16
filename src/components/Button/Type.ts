@@ -12,7 +12,7 @@ interface IconProps {
 }
 export interface ButtonProps extends TouchableOpacityProps {
   onPress?: any;
-  title: string;
+  title?: string;
   outline?: boolean;
   fullSize?: boolean;
   radius?: number;

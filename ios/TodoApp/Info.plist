@@ -49,16 +49,6 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Lato-Black.ttf</string>
-		<string>Lato-BlackItalic.ttf</string>
-		<string>Lato-Bold.ttf</string>
-		<string>Lato-BoldItalic.ttf</string>
-		<string>Lato-Italic.ttf</string>
-		<string>Lato-Light.ttf</string>
-		<string>Lato-LightItalic.ttf</string>
-		<string>Lato-Regular.ttf</string>
-		<string>Lato-Thin.ttf</string>
-		<string>Lato-ThinItalic.ttf</string>
 		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
@@ -78,6 +68,11 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
+		<string>HindSiliguri-Bold.ttf</string>
+		<string>HindSiliguri-Light.ttf</string>
+		<string>HindSiliguri-Medium.ttf</string>
+		<string>HindSiliguri-Regular.ttf</string>
+		<string>HindSiliguri-SemiBold.ttf</string>
 	</array>
 </dict>
 </plist>

@@ -1,5 +1,4 @@
-import { Button } from './Button'
-import { SocialButton } from './SocialButton'
-import { GradientButton } from './GradientButton'
+import { Button } from './Button';
+import { SocialButton } from './SocialButton';
 
-export { Button, SocialButton, GradientButton }
+export { Button, SocialButton };

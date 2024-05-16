@@ -20,8 +20,8 @@ const RegularText = (props: CustomTextProps) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: sizeScale(14),
+    fontWeight: '400',
     fontFamily: kFontFamily.REGULAR,
-    color: colors.white100Primary,
   },
 });
 

@@ -20,9 +20,8 @@ const BoldText = (props: CustomTextProps) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: sizeScale(14),
-    fontWeight: 'bold',
+    fontWeight: '600',
     fontFamily: kFontFamily.BOLD,
-    color: colors.white100Primary,
   },
 });
 

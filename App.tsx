@@ -6,6 +6,7 @@ import { queryClient } from '@services/api';
 import { QueryClientProvider } from '@tanstack/react-query';
 import ErrorBoundary from 'react-native-error-boundary';
 import { CustomFallback } from '@components';
+import Toast from 'react-native-toast-message';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary FallbackComponent={CustomFallback}>
           <Navigation />
+          <Toast />
         </ErrorBoundary>
       </QueryClientProvider>
     </SafeAreaProvider>

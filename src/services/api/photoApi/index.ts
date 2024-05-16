@@ -16,28 +16,3 @@ export const getListTask = async (): Promise<IPhoto[]> => {
       });
   });
 };
-
-const getAll = async (
-  userId: string,
-  onSuccess: (value: Category[]) => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .where(
-      firestore.Filter.or(
-        firestore.Filter('userId', '==', userId),
-        firestore.Filter('isDefault', '==', true),
-      ),
-    )
-    .get()
-    .then(querySnapshot => {
-      let data: Category[] = [];
-      querySnapshot.forEach(doc => {
-        const { userId, name, isDefault = false } = doc.data();
-
-        data.push({ id: doc.id, userId, name, isDefault });
-      });
-      return onSuccess(data);
-    })
-    .catch(onFailed);
-};

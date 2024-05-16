@@ -1,12 +1,11 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useTheme } from '@/Common/Hooks';
-import { sizeScale } from '@/Common/Scale';
-import { Colors } from '@/Theme/Variables';
-import { BoldText, MediumText, RegularText } from '../Text';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { BoldText, MediumText, RegularText, SemiboldText } from '../Text';
 import { ButtonProps } from './Type';
-import ExtralBoldText from '../Text/ExtralBoldText';
+import { Layout } from '@theme';
+import { colors } from 'utils';
+import { sizeScale } from '@common/Scale';
 
 export const Button = (props: ButtonProps) => {
   const {
@@ -23,8 +22,6 @@ export const Button = (props: ButtonProps) => {
     outlineColor,
   } = props;
 
-  const { Layout } = useTheme();
-
   return (
     <TouchableOpacity
       disabled={disable ?? false}
@@ -36,13 +33,13 @@ export const Button = (props: ButtonProps) => {
           backgroundColor: outline
             ? 'transparent'
             : disable
-            ? Colors.disable
-            : Colors.primary,
+            ? colors.disable
+            : colors.primary,
           alignSelf: 'center',
           width: fullSize ? '100%' : 'auto',
-          borderWidth: outline ? 2 : 0,
-          borderColor: outlineColor || Colors.primary,
-          borderRadius: 8,
+          borderWidth: outline ? sizeScale(2) : 0,
+          borderColor: outlineColor || colors.primary,
+          borderRadius: sizeScale(8),
         },
         style,
       ]}
@@ -58,7 +55,7 @@ export const Button = (props: ButtonProps) => {
         <MediumText
           style={[
             styles.text,
-            { color: outline ? outlineColor || Colors.primary : Colors.white },
+            { color: outline ? outlineColor || colors.primary : colors.white },
             textStyle,
           ]}
         >
@@ -68,27 +65,27 @@ export const Button = (props: ButtonProps) => {
         <BoldText
           style={[
             styles.text,
-            { color: outline ? outlineColor || Colors.primary : Colors.white },
+            { color: outline ? outlineColor || colors.primary : colors.white },
             textStyle,
           ]}
         >
           {title}
         </BoldText>
       ) : textType === 'extral-bold' ? (
-        <ExtralBoldText
+        <SemiboldText
           style={[
             styles.text,
-            { color: outline ? outlineColor || Colors.primary : Colors.white },
+            { color: outline ? outlineColor || colors.primary : colors.white },
             textStyle,
           ]}
         >
           {title}
-        </ExtralBoldText>
+        </SemiboldText>
       ) : (
         <RegularText
           style={[
             styles.text,
-            { color: outline ? Colors.primary : Colors.white },
+            { color: outline ? colors.primary : colors.white },
             textStyle,
           ]}
         >
@@ -111,8 +108,9 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: sizeScale(16),
-    height: sizeScale(50),
+    paddingHorizontal: sizeScale(32),
+    paddingVertical: sizeScale(8),
+    height: sizeScale(40),
   },
   text: {
     marginHorizontal: sizeScale(3),

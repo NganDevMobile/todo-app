@@ -1,8 +1,9 @@
-import firestore, { firebase } from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
+import { Task } from '@types';
 
 const instance = firestore().collection('task');
 
-const getAllTasks = async (userId: string) => {
+export const getAllTasks = async (userId: string) => {
   return new Promise((resolve, reject) => {
     instance
       .where('userId', '==', userId)
@@ -11,16 +12,11 @@ const getAllTasks = async (userId: string) => {
         let arr: any[] = [];
 
         querySnapshot.forEach(snapshot => {
-          const { date, ...data } = snapshot.data();
-
           arr.push({
-            ...data,
-            date: date.toDate(),
+            ...snapshot.data(),
             id: snapshot.id,
           });
         });
-
-        console.log('>>> arr', arr);
 
         return resolve(arr);
       })
@@ -28,57 +24,41 @@ const getAllTasks = async (userId: string) => {
   });
 };
 
-const createTask = async (
-  data: any,
-  onSuccess: (id: string) => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .add(data)
-    .then(ref => onSuccess(ref.id))
-    .catch(onFailed);
+export const createTask = async (data: Task) => {
+  return new Promise((resolve, reject) => {
+    instance
+      .add(data)
+      .then(ref => resolve(ref.id))
+      .catch(reject);
+  });
 };
 
-const update = async (
-  taskId: string,
-  data: any,
-  onSuccess: () => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .doc(taskId)
-    .update(data)
-    .then(onSuccess)
-    .catch(onFailed);
+export const updateTask = async (data: any) => {
+  const { id, ...task } = data || {};
+  return new Promise((resolve, reject) => {
+    instance.doc(id).update(task).then(resolve).catch(reject);
+  });
 };
 
-const remove = async (
-  taskId: string,
-  onSuccess: () => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance.doc(taskId).delete().then(onSuccess).catch(onFailed);
+export const deleteTask = async (id: string) => {
+  return new Promise((resolve, reject) => {
+    instance.doc(id).delete().then(resolve).catch(reject);
+  });
 };
 
-const removeAll = async (
-  categoryId: string,
-  onSuccess: () => void,
-  onFailed: (error: Error) => any,
-) => {
-  const batch = firestore().batch();
+export const deleteAllTasks = async (catId: string) => {
+  return new Promise(async (resolve, reject) => {
+    const batch = firestore().batch();
 
-  return await instance
-    .where('catId', '==', categoryId)
-    .get()
-    .then(async querySnapshot => {
-      querySnapshot.forEach(doc => {
-        batch.delete(doc.ref);
-      });
+    instance
+      .where('catId', '==', catId)
+      .get()
+      .then(async querySnapshot => {
+        querySnapshot.forEach(doc => batch.delete(doc.ref));
 
-      await batch.commit();
-      onSuccess();
-    })
-    .catch(onFailed);
+        await batch.commit();
+        resolve();
+      })
+      .catch(reject);
+  });
 };
-
-export { getAllTasks };

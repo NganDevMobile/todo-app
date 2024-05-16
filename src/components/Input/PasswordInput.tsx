@@ -3,14 +3,11 @@ import { StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
 import { useController } from 'react-hook-form';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-// Components
 import { RegularText } from '../Text';
-// Icon
 import { InputProps } from './type';
 import Layout from '@theme/layout';
 import { colors } from 'utils';
 import { sizeScale } from '@common/Scale';
-// Theme
 
 const PasswordInput = (props: InputProps) => {
   const {

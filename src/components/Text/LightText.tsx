@@ -20,9 +20,8 @@ const LightText = (props: CustomTextProps) => {
 const styles = StyleSheet.create({
   text: {
     fontSize: sizeScale(14),
-    fontWeight: 'bold',
+    fontWeight: '700',
     fontFamily: kFontFamily.LIGHT,
-    color: colors.white100Primary,
   },
 });
 

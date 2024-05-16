@@ -1,9 +1,11 @@
 import { StoreApi, create } from 'zustand';
+import { StateStorage, createJSONStorage, persist } from 'zustand/middleware';
 import LocalStorage from '../local-storage';
-import { createJSONStorage, persist, StateStorage } from 'zustand/middleware';
+import createCategorySlice, { CategorySlice } from './app/CategorySlice';
 import createTaskSlice, { TaskSlice } from './app/TaskSlice';
+import createUserSlice, { UserSlice } from './app/UserSlice';
 
-export type StoreState = TaskSlice;
+export type StoreState = TaskSlice & CategorySlice & UserSlice;
 export type StoreSlice<T> = (
   set: StoreApi<StoreState>['setState'],
   get: StoreApi<StoreState>['getState'],
@@ -26,6 +28,8 @@ const useStore = create<StoreState>()(
   persist(
     (set, get) => ({
       ...createTaskSlice(set, get),
+      ...createCategorySlice(set, get),
+      ...createUserSlice(set, get),
     }),
     {
       name: 'store',

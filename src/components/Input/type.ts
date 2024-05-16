@@ -7,6 +7,9 @@ export interface InputProps extends TextInputProps {
   errorText?: any;
   containerStyle?: StyleProp<ViewStyle>;
   inputStyle?: StyleProp<ViewStyle>;
+  editable?: boolean;
+  rightPress?: (value?: string) => void;
+  iconRight?: Element;
   icon?: {
     name: string;
     size?: number;

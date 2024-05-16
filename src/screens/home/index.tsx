@@ -1,81 +1,103 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
-import React, { useEffect } from 'react';
-import { RouterNames } from '@common';
-import { useNavigation } from '@react-navigation/native';
-import Header from '@components/Header';
-import FastImage from 'react-native-fast-image';
-import images from '@theme/images';
+import RouterName from '@common/RouterName';
 import { sizeScale } from '@common/Scale';
-import { colors } from 'utils';
-import { RegularText } from '@components/Text';
+import Loading from '@components/Loading';
+import TaskList from '@components/TaskList';
+import { LightText, RegularText } from '@components/Text';
+import { Layout } from '@theme';
+import { Count } from '@types';
 import useStore from '@zustand';
-import { useGetTasks } from 'hooks/useTasks';
+import { useStatusTaskCount } from 'hooks';
+import { useDateTask } from 'hooks/useTask';
+import React, { useState } from 'react';
+import {
+  FlatList,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { colors } from 'utils';
+import HeaderHome from './HeaderHome';
+import TaskStatusItem from './TaskStatusItem';
 
-const HomeScreen = () => {
-  const navigation = useNavigation();
+interface DataType {
+  item: Array<Count>;
+}
 
-  const addTask = () => {
-    navigation.navigate(RouterNames.ADD_SCREEN as never);
+const HomeScreen = ({ navigation }: any) => {
+  const user = useStore(state => state.user);
+
+  const { name } = user || {};
+
+  const { leftStatusTasks, rightStatusTasks } = useStatusTaskCount();
+
+  const { dateTasks = [] } = useDateTask();
+
+  const [isLoading, setLoading] = useState(false);
+
+  const onLoading = (value: boolean) => {
+    value !== isLoading && setLoading(value);
   };
 
-  const { isPending, mutateAsync: getAllTasks } = useGetTasks();
-  const { tasks, setTasks } = useStore();
-
-  useEffect(() => {
-    console.log('>>> pending', isPending);
-  }, [isPending]);
-
-  useEffect(() => {
-    console.log('>>> tasks', tasks);
-  }, [tasks]);
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-      const items = await getAllTasks('QirUyHJuUROWnSBEGoX5');
-      setTasks(items);
-    } catch (error) {
-      console.log('>>> error', error);
-    }
+  const renderItem = ({ item, index }: { item: DataType; index: number }) => {
+    return <TaskStatusItem item={item.item} index={index} />;
   };
 
-  if (isPending) {
-    return <Text>Loading</Text>;
-  }
+  const renderTaskByStatus = () => {
+    return (
+      <View>
+        <LightText style={styles.titleMyTask}>My Task</LightText>
+
+        <FlatList
+          keyExtractor={(_, index) => index?.toString()}
+          renderItem={renderItem}
+          data={[{ item: leftStatusTasks }, { item: rightStatusTasks }]}
+          horizontal
+          scrollEnabled={false}
+        />
+      </View>
+    );
+  };
+
+  const renderTaskToday = () => {
+    const onPress = () => {
+      navigation.navigate(RouterName.STATUS_TASK_SCREEN, {
+        status: 'all',
+        name: 'All',
+      });
+    };
+    return (
+      <>
+        <View style={[Layout.rowBetween, { marginTop: sizeScale(32) }]}>
+          <LightText style={styles.titleMyTask}>Today Task</LightText>
+
+          {dateTasks.length > 0 && (
+            <TouchableOpacity onPress={onPress}>
+              <RegularText style={styles.viewAll}>View all</RegularText>
+            </TouchableOpacity>
+          )}
+        </View>
+        <TaskList
+          data={dateTasks}
+          scrollEnabled={false}
+          bottomSpace={100}
+          onLoading={onLoading}
+        />
+      </>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Home Page" rightPress={addTask} />
-
-      <View style={styles.container}>
-        <FastImage source={images.checklist} style={styles.imgChecklist} />
-        <RegularText style={[styles.textWhite, { fontSize: sizeScale(20) }]}>
-          What do you want to do today?
-        </RegularText>
-        <TouchableOpacity onPress={addTask}>
-          <RegularText
-            style={[
-              styles.textWhite,
-              {
-                fontSize: sizeScale(16),
-                marginTop: sizeScale(10),
-                color: colors.primary,
-              },
-            ]}
-          >
-            Tap + to add your tasks
-          </RegularText>
-        </TouchableOpacity>
-      </View>
+      <Loading isLoading={isLoading} />
+      <HeaderHome name={name} />
+      <ScrollView>
+        <View style={styles.viewContainer}>
+          {renderTaskByStatus()}
+          {renderTaskToday()}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -85,9 +107,12 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.black,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: colors.white,
+  },
+  viewContainer: {
+    flex: 1,
+    paddingHorizontal: sizeScale(24),
+    backgroundColor: colors.white,
   },
   imgChecklist: {
     width: sizeScale(230),
@@ -101,5 +126,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     backgroundColor: 'white',
+  },
+  titleMyTask: {
+    fontSize: sizeScale(24),
+    color: colors.textColor,
+  },
+  viewAll: {
+    color: colors.textColor,
   },
 });

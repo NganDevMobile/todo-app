@@ -1,79 +1,56 @@
-import { TaskService } from '@services/firestore';
 import firestore from '@react-native-firebase/firestore';
+import { deleteAllTasks } from './task';
 
 const instance = firestore().collection('category');
 
-interface Category {
-  id: string;
-  isDefault: boolean;
-  name: string;
-  userId?: string;
-}
+export const getAllCategories = async (userId: string) => {
+  return new Promise((resolve, reject) => {
+    instance
+      .where(
+        firestore.Filter.or(
+          firestore.Filter('userId', '==', userId),
+          firestore.Filter('isDefault', '==', true),
+        ),
+      )
+      .get()
+      .then(querySnapshot => {
+        let arr: any[] = [];
 
-const getAll = async (
-  userId: string,
-  onSuccess: (value: Category[]) => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .where(
-      firestore.Filter.or(
-        firestore.Filter('userId', '==', userId),
-        firestore.Filter('isDefault', '==', true),
-      ),
-    )
-    .get()
-    .then(querySnapshot => {
-      let data: Category[] = [];
-      querySnapshot.forEach(doc => {
-        const { userId, name, isDefault = false } = doc.data();
+        querySnapshot.forEach(snapshot => {
+          arr.push({
+            ...snapshot.data(),
+            id: snapshot.id,
+          });
+        });
 
-        data.push({ id: doc.id, userId, name, isDefault });
-      });
-      return onSuccess(data);
-    })
-    .catch(onFailed);
+        return resolve(arr);
+      })
+      .catch(reject);
+  });
 };
 
-const create = async (
-  data: any,
-  onSuccess: (id: string) => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .add({ isDefault: false, ...data })
-    .then(ref => onSuccess(ref.id))
-    .catch(onFailed);
+export const createCategory = async (data: any) => {
+  return new Promise((resolve, reject) => {
+    instance
+      .add({ ...data, isDefault: false })
+      .then(ref => resolve(ref.id))
+      .catch(reject);
+  });
 };
 
-const update = async (
-  categoryId: string,
-  data: any,
-  onSuccess: () => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .doc(categoryId)
-    .update(data)
-    .then(onSuccess)
-    .catch(onFailed);
+export const updateCategory = async (data: any) => {
+  const { id, ...category } = data || {};
+  return new Promise((resolve, reject) => {
+    instance.doc(id).update(category).then(resolve).catch(reject);
+  });
 };
 
-const remove = async (
-  categoryId: string,
-  onSuccess: () => void,
-  onFailed: (error: Error) => any,
-) => {
-  return await instance
-    .doc(categoryId)
-    .delete()
-    .then(() => TaskService.removeAll(categoryId, onSuccess, onFailed))
-    .catch(onFailed);
-};
-
-export default {
-  getAll,
-  create,
-  update,
-  remove,
+export const deleteCategory = async (id: string) => {
+  return new Promise((resolve, reject) => {
+    instance
+      .doc(id)
+      .delete()
+      .then(async () => resolve(deleteAllTasks(id)))
+      .catch(reject);
+  });
 };

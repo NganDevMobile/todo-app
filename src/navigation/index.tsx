@@ -1,39 +1,51 @@
-// In App.js in a new project
-
 import * as React from 'react';
-import { View, Text, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RouterNames } from '@common';
-import { SignIn, SignUp } from 'screens/authenticate';
-import HomeScreen from 'screens/home';
-import TaskScreen from 'screens/tasks';
 import BottomTab from './CustomNavigation';
 import AddScreen from 'screens/add';
+import { colors } from 'utils';
+import SplashScreen from 'screens/splash';
+import AddCategoryScreen from 'screens/addCategory';
+import StatusTaskScreen from 'screens/statusTasks';
+import CategoryTaskScreen from 'screens/categoryTasks';
+import TaskDetailScreen from 'screens/taskDetail';
 
 const Stack = createNativeStackNavigator();
 
 function App() {
   return (
     <NavigationContainer>
-      <StatusBar
-      // translucent
-      // barStyle="dark-content"
-      // backgroundColor={'transparent'}
-      />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white} />
       <Stack.Navigator
-        initialRouteName={RouterNames.BOTTOM_TAB_BAR}
+        initialRouteName={RouterNames.SPLASH_SCREEN}
         screenOptions={{
           headerShown: false,
         }}
       >
+        <Stack.Screen
+          name={RouterNames.SPLASH_SCREEN}
+          component={SplashScreen}
+        />
         <Stack.Screen name={RouterNames.BOTTOM_TAB_BAR} component={BottomTab} />
         <Stack.Screen name={RouterNames.ADD_SCREEN} component={AddScreen} />
-
-        {/* <Stack.Screen name={RouterNames.HOME_SCREEN} component={HomeScreen} />
-        <Stack.Screen name={RouterNames.SIGN_IN} component={SignIn} />
-        <Stack.Screen name={RouterNames.SIGN_UP} component={SignUp} />
-        <Stack.Screen name={RouterNames.TASK_SCREEN} component={TaskScreen} /> */}
+        <Stack.Screen
+          name={RouterNames.ADD_CATEGORY_SCREEN}
+          component={AddCategoryScreen}
+        />
+        <Stack.Screen
+          name={RouterNames.STATUS_TASK_SCREEN}
+          component={StatusTaskScreen}
+        />
+        <Stack.Screen
+          name={RouterNames.CATEGORY_TASK_SCREEN}
+          component={CategoryTaskScreen}
+        />
+        <Stack.Screen
+          name={RouterNames.TASK_DETAIL_SCREEN}
+          component={TaskDetailScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

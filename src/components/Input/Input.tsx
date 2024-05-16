@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, TouchableOpacity } from 'react-native';
 import { useController } from 'react-hook-form';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { colors } from 'utils';
@@ -7,7 +7,7 @@ import { sizeScale } from '@common/Scale';
 import { RegularText } from '@components/Text';
 import Layout from '@theme/layout';
 import { InputProps } from './type';
-// Theme
+import FastImage from 'react-native-fast-image';
 
 const Input = (props: InputProps) => {
   const {
@@ -16,6 +16,9 @@ const Input = (props: InputProps) => {
     containerStyle,
     inputStyle,
     errorText,
+    iconRight,
+    rightPress,
+    editable,
     icon,
   } = props;
   const { field } = useController({
@@ -25,12 +28,19 @@ const Input = (props: InputProps) => {
     name: controller.name,
   });
 
+  const handlePressRight = () => {
+    rightPress && rightPress(field?.value ?? '');
+  };
+
   return (
     <View style={[styles.container, containerStyle]}>
+      {controller.name && (
+        <RegularText style={styles.title}>{controller.name}</RegularText>
+      )}
       <View
         style={[
           styles.inputContainer,
-          Layout.rowHCenter,
+          Layout.rowBetween,
           {
             borderColor: errorText
               ? colors.error
@@ -58,13 +68,21 @@ const Input = (props: InputProps) => {
           </View>
         )}
         <TextInput
+          editable={editable}
           style={[styles.input, inputStyle]}
           value={field.value}
           onChangeText={field.onChange}
-          placeholder={placeholder ? placeholder : ''}
-          placeholderTextColor={colors.placeHolder}
+          placeholder={placeholder ?? ''}
+          placeholderTextColor={colors.textGray}
           {...props}
         />
+
+        {iconRight && (
+          <TouchableOpacity onPress={handlePressRight}>
+            <FastImage source={iconRight} style={styles.iconRight} />
+          </TouchableOpacity>
+        )}
+
         {!errorText && field.value !== '' && (
           <Icon
             style={styles.icon}
@@ -89,10 +107,8 @@ const styles = StyleSheet.create({
     height: sizeScale(40),
     width: '100%',
     borderBottomWidth: 1,
-    paddingHorizontal: sizeScale(16),
     borderRadius: sizeScale(4),
-    borderColor: colors.border,
-    borderWidth: 1,
+    borderBottomColor: colors.border,
   },
   input: {
     flex: 1,
@@ -100,7 +116,7 @@ const styles = StyleSheet.create({
     fontSize: sizeScale(14),
     padding: 0,
     margin: 0,
-    color: colors.white100Primary,
+    color: colors.textColor,
   },
   error: {
     marginTop: sizeScale(10),
@@ -109,5 +125,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: sizeScale(5),
+  },
+  title: {
+    color: colors.textPrimary,
+  },
+  iconRight: {
+    width: sizeScale(20),
+    height: sizeScale(20),
   },
 });
